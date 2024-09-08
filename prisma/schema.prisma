@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Image {
+  id               String   @id @default(cuid())
+  title            String
+  transformationType String
+  publicId         String
+  secureURL        String
+  width            Int?
+  height           Int?
+  config           Json?
+  transformationUrl String?
+  aspectRatio      String?
+  color            String?
+  prompt           String?
+  authorId         String?  // Foreign key field
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  author           User?    @relation(fields: [authorId], references: [id])  
+
+  @@index([authorId])
+}
+
+
+
+model Transaction {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  stripeId   String   @unique
+  amount     Int
+  plan       String?
+  credits    Int?
+  buyerId    String?  // Foreign key field
+
+  buyer      User?    @relation(fields: [buyerId], references: [id]) 
+
+  @@index([buyerId])
+}
+
+
+model User {
+  id            String   @id @default(cuid())
+  clerkId       String   @unique
+  email         String   @unique
+  username      String   @unique
+  photo         String
+  firstName     String?
+  lastName      String?
+  planId        Int      @default(1)
+  creditBalance Int      @default(10)
+
+  transactions  Transaction[]
+  images        Image[]   // Relation to Image model
+
+  @@index([clerkId, email, username])
+}
+
+
+
+
+
+
+
+

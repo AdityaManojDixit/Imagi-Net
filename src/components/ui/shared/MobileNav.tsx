@@ -1,19 +1,20 @@
+"use client"
 import React from 'react'
 import {
     Sheet,
-    SheetClose,
     SheetContent,
-    SheetDescription,
-    SheetFooter,
-    SheetHeader,
-    SheetTitle,
     SheetTrigger,
-  } from "@/components/ui/sheet"
+} from "@/components/ui/sheet"
 import Link from 'next/link'
 import Image from 'next/image'
-import { SignedIn, UserButton } from '@clerk/nextjs'
+import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { navLinks } from '../../../constants'
+import { usePathname } from 'next/navigation'
+import { Button } from '../button'
 
 const MobileNav = () => {
+
+    const pathname = usePathname()
   return (
     <header className='header'>
         <Link href="/" className='flex item-centre gap-2 md:py-2 '> 
@@ -29,18 +30,55 @@ const MobileNav = () => {
                 <UserButton afterSwitchSessionUrl='/'/>
             </SignedIn>
             <Sheet>
-                <SheetTrigger>Open</SheetTrigger>
-                <SheetContent className="w-[400px] sm:w-[540px]">
-                    <SheetHeader>
-                    <SheetTitle>Are you absolutely sure?</SheetTitle>
-                    <SheetDescription>
-                        This action cannot be undone. This will permanently delete your account
-                        and remove your data from our servers.
-                    </SheetDescription>
-                    </SheetHeader>
+                <SheetTrigger>
+                    <Image 
+                        src = "\public\assets\icons\menu.svg"
+                        alt = "menu"
+                        width={32} 
+                        height={32}
+                        className='cursor-pointer'
+                    />
+                </SheetTrigger>
+                <SheetContent className="sheet-content sm:w-54 ">
+                    <>
+                        <Image
+                            src="/public/assets/images/logo-text.svg"
+                            alt="logo"
+                            width={152}
+                            height={23}
+                        />
+
+                        <ul className='sidebar-nav_elements'>
+                            {
+                                navLinks.map((link)=>{
+                                    //Link on which we currently are
+                                    const isActive = link.route === pathname
+                                    return (
+                                    <li key={link.route} className={`${isActive && 'gradient-text'} p-18 flex whitespace-nowrap text-dark-700 `}>
+                                        <Link className='sidebar-link cursor-pointer' href={link.route}>
+                                        <Image 
+                                            src={`public/${link.icon}`}
+                                            alt='logo'
+                                            width={24}
+                                            height={24}
+                            
+                                        />
+                                        {link.label}
+                                        </Link>
+                                    </li>
+                                )
+                            })}
+                        </ul>  
+                    </>
                 </SheetContent>
             </Sheet>
 
+            <SignedOut>
+                  {/* asChild ensures it renders as link */}
+                  <Button asChild className='bg-purple-gradient bg-cover'>
+                      <Link href="/sign-in"> Login </Link>
+                  </Button>
+            </SignedOut>
         </nav>
     </header>
   )
