@@ -4,12 +4,19 @@ import { revalidatePath } from "next/cache";
 import User from "../db/models/user.model";
 import { connectToDatabase } from "../db/mongoose";
 import { handleError } from "../utils";
+import { NextResponse } from "next/server";
 
 // Create
 export async function createUser(user: CreateUserParams) {
     try {
         await connectToDatabase();
-        const newUser = await User.create(user);
+        const userToCreate = await User.findOne({ clerkId: user.clerkId });
+        if (userToCreate) {
+            console.log("User already exists:", userToCreate);
+            return NextResponse.json({ message: "User already exists.", user: userToCreate });
+        }
+
+        const newUser = await User.create(userToCreate);
         return JSON.parse(JSON.stringify(newUser));
     } catch (error) {
         console.error("Error creating user:", error);
