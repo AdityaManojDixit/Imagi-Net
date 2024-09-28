@@ -10,6 +10,14 @@ import { NextResponse } from "next/server";
 export async function createUser(user: CreateUserParams) {
     try {
         await connectToDatabase();
+        const existingUserByEmail = await User.findOne({ email: user.email });
+        if (existingUserByEmail) {
+            console.log("User with this email already exists:", existingUserByEmail);
+            return NextResponse.json(
+                { message: "User with this email already exists.", user: existingUserByEmail },
+                { status: 409 } // 409 Conflict: Email is already in use
+            );
+        }
         const existingUser = await User.findOne({ clerkId: user.clerkId });
         if (existingUser) {
             console.log("User already exists:", existingUser);
