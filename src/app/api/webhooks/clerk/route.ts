@@ -91,7 +91,7 @@ export async function POST(req: Request) {
     const user = {
       firstName: first_name ?? "",
       lastName: last_name ?? "",
-      username: username!,
+      username: username! ,
       photo: image_url,
     };
 
@@ -109,7 +109,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "OK", user: deletedUser });
   }
 
-  console.log(`Webhook with ID of ${id} and type of ${eventType}`);
+  console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
   console.log("Webhook body:", body);
 
   return new Response("", { status: 200 });

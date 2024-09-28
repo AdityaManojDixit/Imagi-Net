@@ -1,5 +1,9 @@
 import { promises } from "dns";
 import mongoose, {Mongoose} from "mongoose";
+import { config } from 'dotenv';
+
+config();
+
 
 const MONGODB_URL = process.env.MONGODB_URI;
 
