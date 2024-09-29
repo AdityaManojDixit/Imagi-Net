@@ -10,26 +10,26 @@ import { NextResponse } from "next/server";
 export async function createUser(user: CreateUserParams) {
     try {
         await connectToDatabase();
-        const existingUserByEmail = await User.findOne({ email: user.email });
-        if (existingUserByEmail) {
-            console.log("User with this email already exists:", existingUserByEmail);
-            return NextResponse.json(
-                { message: "User with this email already exists.", user: existingUserByEmail },
-                { status: 409 } // 409 Conflict: Email is already in use
-            );
-        }
-        const existingUser = await User.findOne({ clerkId: user.clerkId });
-        if (existingUser) {
-            console.log("User already exists:", existingUser);
-            return NextResponse.json({ message: "User already exists.", user: existingUser });
-        }
+        //Check exsiting user
 
-        const newUser = await User.create(user); // Fixed: Use the incoming 'user' to create a new user
+        const existingUser = await User.findOne({
+            $or: [
+                { email : user.email },
+                { clerkId: user.clerkId },
+                { username : user.username}
+            ]
+        });
+        if (existingUser) {
+            throw new Error("User already exists.");
+        } 
+        
+        const newUser = await User.create(user);
+        
+        //Return newUser
         return JSON.parse(JSON.stringify(newUser));
     } catch (error) {
-        console.error("Error creating user:", error);
+        console.error("[Error] : user.actions.ts");
         handleError(error);
-        throw error; 
     }
 }
 
@@ -41,19 +41,14 @@ export async function getUserById(userId: string) {
 
         // Check if the user exists
         if (!user) {
-            return NextResponse.json({ message: "User not found." },{ status: 404 });
+            throw new Error("User not found");
         }
-        // Return the user object if found
-        return NextResponse.json(
-            JSON.parse(JSON.stringify(user)),
-            { status: 200 } // Return a 200 status code for success
-        );
+       
+        //Return user
+        return JSON.parse(JSON.stringify(user));
     } catch (error) {
-        handleError(error); // Handle the error (logging, etc.)
-        return NextResponse.json(
-            { message: "Error retrieving user.", error},
-            { status: 500 } // Return a 500 status code for server error
-        );
+        console.error("[Error] : user.actions.ts ");
+        handleError(error); 
     }
 }
 
@@ -61,18 +56,26 @@ export async function getUserById(userId: string) {
 export async function updateUser(clerkId: string, user: UpdateUserParams) {
     try {
         await connectToDatabase();
+
+        const userToUpdate = await User.findOne({ clerkId });
+        if (!userToUpdate) {
+            throw new Error("User to update not found.");
+        }
+
         const updatedUser = await User.findOneAndUpdate(
             { clerkId },
             user,
             { new: true } // Ensures the updated document is returned
         );
         if (!updatedUser) {
-            return NextResponse.json({ message: "User update failed." });
+            throw new Error("User update failed.");
         }
+
+        //Return updated user
         return JSON.parse(JSON.stringify(updatedUser));
     } catch (error) {
+        console.error("[Error] : user.actions.ts");
         handleError(error);
-        throw error;
     }
 }
 
@@ -83,16 +86,36 @@ export async function deleteUser(clerkId: string) {
         // Find user
         const userToDelete = await User.findOne({ clerkId });
         if (!userToDelete) {
-            return NextResponse.json({ message: "User not found." });
+            throw new Error("User to delete not found");
         }
+
         // Delete user
         const deletedUser = await User.findByIdAndDelete(userToDelete._id);
         revalidatePath("/");
 
+        //Return deleted user
         return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null;
     } catch (error) {
+        console.error("[Error] : user.actions.ts ");
         handleError(error);
-        throw error;
     }
 }
 
+// USE CREDITS
+export async function updateCredits(userId: string, creditFee: number) {
+    try {
+      await connectToDatabase();
+  
+      const updatedUserCredits = await User.findOneAndUpdate(
+        { _id: userId },
+        { $inc: { creditBalance: creditFee }},
+        { new: true }
+      )
+  
+      if(!updatedUserCredits) throw new Error("User credits update failed");
+  
+      return JSON.parse(JSON.stringify(updatedUserCredits));
+    } catch (error) {
+      handleError(error);
+    }
+}

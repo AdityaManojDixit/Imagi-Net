@@ -83,7 +83,7 @@ export async function POST(req: Request) {
       });
     }
 
-    return NextResponse.json({ message: "OK", user: newUser });
+    return NextResponse.json({ message: "OK", user: newUser }, { status: 200 });
   }
 
   // UPDATE
@@ -99,7 +99,7 @@ export async function POST(req: Request) {
 
     const updatedUser = await updateUser(id, user);
 
-    return NextResponse.json({ message: "OK", user: updatedUser });
+    return NextResponse.json({ message: "OK", user: updatedUser }, { status: 200 });
   }
 
   // DELETE
@@ -108,7 +108,7 @@ export async function POST(req: Request) {
 
     const deletedUser = await deleteUser(id!);
 
-    return NextResponse.json({ message: "OK", user: deletedUser });
+    return NextResponse.json({ message: "OK", user: deletedUser }, { status: 200 });
   }
 
 
