@@ -20,13 +20,17 @@ export async function createUser(user: CreateUserParams) {
             ]
         });
         if (existingUser) {
-            throw new Error("User already exists.");
-        } 
+             return NextResponse.json(
+                { message: 'User already exists. Please sign in.' },
+                { status: 409 }
+            );
+        }
+        else{
+            const newUser = await User.create(user);
+            //Return newUser
+            return JSON.parse(JSON.stringify(newUser));
+        }
         
-        const newUser = await User.create(user);
-        
-        //Return newUser
-        return JSON.parse(JSON.stringify(newUser));
     } catch (error) {
         console.error("[Error] : user.actions.ts");
         handleError(error);
