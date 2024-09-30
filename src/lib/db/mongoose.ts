@@ -5,7 +5,7 @@ import { config } from 'dotenv';
 config();
 
 const MONGODB_URL = process.env.MONGODB_URI;
-console.log()
+
 
 interface MongooseConnection {
     conn: Mongoose | null;
@@ -21,7 +21,6 @@ export const connectToDatabase = async () =>{
     if(cached.conn) return cached.conn;
 
     if(!MONGODB_URL) throw new Error('MONGODB_URL not defined');
-    console.log()
     
     cached.promise = 
         cached.promise || 

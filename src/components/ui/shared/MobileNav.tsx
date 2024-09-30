@@ -39,7 +39,7 @@ const MobileNav = () => {
                         className='cursor-pointer'
                     />
                 </SheetTrigger>
-                <SheetContent className="sheet-content sm:w-54 ">
+                <SheetContent className="sheet-content sm:w-54 md:w-72 lg:w-96 ">
                     <>
                         <Image
                             src="/public/assets/images/logo-text.svg"
@@ -48,13 +48,13 @@ const MobileNav = () => {
                             height={23}
                         />
 
-                        <ul className='sidebar-nav_elements'>
+                        <ul className='sidebar-nav_elements mt-4 flex flex-col'>
                             {
                                 navLinks.map((link)=>{
                                     //Link on which we currently are
                                     const isActive = link.route === pathname
                                     return (
-                                    <li key={link.route} className={`${isActive && 'gradient-text'} p-18 flex whitespace-nowrap text-dark-700 `}>
+                                    <li key={link.route} className={`mt-2 rounded-full w-full flex whitespace-nowrap p-18 ${isActive ? 'bg-purple-900/70 text-white' : 'text-gray-700'} sm:p-2 `}>
                                         <Link className='sidebar-link cursor-pointer' href={link.route}>
                                         <Image 
                                             src={`public/${link.icon}`}
