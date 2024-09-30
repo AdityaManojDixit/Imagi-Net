@@ -19,7 +19,7 @@ const MobileNav = () => {
     <header className='header'>
         <Link href="/" className='flex item-centre gap-2 md:py-2 '> 
             <Image 
-                src="public/assets/images/logo-text.svg"
+                src="/assets/images/logo-text.svg"
                 alt="logo"
                 width={180}
                 height={28}
@@ -32,7 +32,7 @@ const MobileNav = () => {
             <Sheet>
                 <SheetTrigger>
                     <Image 
-                        src = "\public\assets\icons\menu.svg"
+                        src = "/assets/icons/menu.svg"
                         alt = "menu"
                         width={32} 
                         height={32}
@@ -42,7 +42,7 @@ const MobileNav = () => {
                 <SheetContent className="sheet-content sm:w-54 md:w-72 lg:w-96 ">
                     <>
                         <Image
-                            src="/public/assets/images/logo-text.svg"
+                            src="/assets/images/logo-text.svg"
                             alt="logo"
                             width={152}
                             height={23}
@@ -57,7 +57,7 @@ const MobileNav = () => {
                                     <li key={link.route} className={`mt-2 rounded-full w-full flex whitespace-nowrap p-18 ${isActive ? 'bg-purple-900/70 text-white' : 'text-gray-700'} sm:p-2 `}>
                                         <Link className='sidebar-link cursor-pointer' href={link.route}>
                                         <Image 
-                                            src={`public/${link.icon}`}
+                                            src={`${link.icon}`}
                                             alt='logo'
                                             width={24}
                                             height={24}

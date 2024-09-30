@@ -16,7 +16,7 @@ const Sidebar = () => {
       <aside className='sidebar'>
         <div className='flex size-full flex-col gap-4'>
           <Link href="/" className='sidebar-logo'>
-            <Image src="public\assets\images\logo-text.svg" alt="logo" width={180} height={28}/>
+            <Image src="/assets/images/logo-text.svg" alt="logo" width={180} height={28}/>
           </Link>
 
           <nav className='sidebar-nav'>
@@ -31,7 +31,8 @@ const Sidebar = () => {
               
                             <Link className='sidebar-link' href={link.route}>
                               <Image 
-                                src={`public/${link.icon}`}
+                                src={`${link.icon}`}
+                  
                                 alt='logo'
                                 width={24}
                                 height={24}
@@ -57,7 +58,7 @@ const Sidebar = () => {
               
                             <Link className='sidebar-link' href={link.route}>
                               <Image 
-                                src={`public/${link.icon}`}
+                                src={`${link.icon}`}
                                 alt='logo'
                                 width={24}
                                 height={24}
