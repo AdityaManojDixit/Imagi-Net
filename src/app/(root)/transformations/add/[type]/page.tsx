@@ -8,7 +8,7 @@ import { useAuth } from '@clerk/clerk-react';
 import { getUserById } from '@/lib/actions/user.actions';
 import { redirect } from 'next/navigation';
 import { UUser } from '@/lib/db/models/user.model';
-
+import TransForm from '@/components/ui/shared/TransForm';
  
 const AddTransformationTypePage = ({ params: { type } }: SearchParamProps) => {
   const { userId } = useAuth();
@@ -44,8 +44,8 @@ const AddTransformationTypePage = ({ params: { type } }: SearchParamProps) => {
         subtitle={transformation.subTitle}
       />
     
-      <section className="mt-10">
-        <TransformationForm 
+      <section className='mt-10' >
+        <TransForm 
           action="Add"
           userId={user? user._id : ""}
           type={transformation.type as TransformationTypeKey}
