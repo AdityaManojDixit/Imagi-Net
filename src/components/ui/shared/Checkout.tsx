@@ -26,7 +26,7 @@ export default function Checkout({ orderData }: { orderData: any }) {
     }
 
     const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
+      key: process.env.RAZORPAY_KEY_ID!,
       amount: orderData.amount,
       currency: orderData.currency,
       name: "Your Company",
