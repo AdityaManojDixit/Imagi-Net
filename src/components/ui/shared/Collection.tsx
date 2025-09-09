@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { CldImage } from "next-cloudinary";
+import { SignedIn } from "@clerk/nextjs";
 
 import {
   Pagination,
@@ -49,6 +50,7 @@ export const Collection = ({
 
   return (
     <>
+      
       <div className="collection-heading">
         <h2 className="h2-bold text-dark-600">Recent Edits</h2>
         {hasSearch && <Search />}

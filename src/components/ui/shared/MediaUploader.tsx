@@ -29,7 +29,7 @@ const MediaUploader = ({
       publicId: result?.info?.public_id,
       width: result?.info?.width,
       height: result?.info?.height,
-      secureURL: result?.info?.secure_url
+      secureUrl: result?.info?.secure_url
     }))
 
     onValueChange(result?.info?.public_id)
@@ -53,7 +53,7 @@ const MediaUploader = ({
 
   return (
     <CldUploadWidget
-      uploadPreset="jsm_imaginify"
+      uploadPreset="imaginify"
       options={{
         multiple: false,
         resourceType: "image",
