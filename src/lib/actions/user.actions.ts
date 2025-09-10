@@ -5,56 +5,61 @@ import User from "../db/models/user.model";
 import { connectToDatabase } from "../db/mongoose";
 import { handleError } from "../utils";
 import { NextResponse } from "next/server";
-
 // Create
 export async function createUser(user: CreateUserParams) {
-    try {
-        await connectToDatabase();
-        //Check exsiting user
+  try {
+    await connectToDatabase();
 
-        const existingUser = await User.findOne({
-            $or: [
-                { email : user.email },
-                { clerkId: user.clerkId },
-                { username : user.username}
-            ]
-        });
-        if (existingUser) {
-             return NextResponse.json(
-                { message: 'User already exists. Please sign in.' },
-                { status: 409 }
-            );
-        }
-        else{
-            const newUser = await User.create(user);
-            //Return newUser
-            return JSON.parse(JSON.stringify(newUser));
-        }
-        
-    } catch (error) {
-        console.error("[Error] : user.actions.ts");
-        handleError(error);
+    const existingUser = await User.findOne({
+      $or: [
+        { email: user.email },
+        { clerkId: user.clerkId },
+        { username: user.username }
+      ]
+    });
+
+    if (existingUser) {
+      // ✅ Just return the existing user
+      return JSON.parse(JSON.stringify(existingUser));
     }
+
+    const newUser = await User.create(user);
+    return JSON.parse(JSON.stringify(newUser));
+
+  } catch (error) {
+    console.error("[Error] : user.actions.ts");
+    handleError(error);
+  }
 }
+
 
 // Read
-export async function getUserById(userId: string) {
-    try {
-        await connectToDatabase();
-        const user = await User.findOne({ clerkId: userId });
+export async function getUserById(clerkId: string) {
+    
+  try {
+    await connectToDatabase();
 
-        // Check if the user exists
-        if (!user) {
-            throw new Error("User not found");
-        }
-       
-        //Return user
-        return JSON.parse(JSON.stringify(user));
-    } catch (error) {
-        console.error("[Error] : user.actions.ts ");
-        handleError(error); 
+    let user = await User.findOne({ clerkId });
+
+    if (!user) {
+      // create a new user record on-the-fly
+      user = await User.create({
+        clerkId,
+        email: `${clerkId}@placeholder.com`, // update when you have real email
+        username: `user_${clerkId.slice(-6)}`,
+        firstName: "New",
+        lastName: "User",
+        photo: "public/user.svg"
+      });
     }
+
+    return JSON.parse(JSON.stringify(user));
+  } catch (error) {
+    console.error("[Error] : user.actions.ts ");
+    handleError(error);
+  }
 }
+
 
 // Update
 export async function updateUser(clerkId: string, user: UpdateUserParams) {

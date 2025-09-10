@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { CldImage } from "next-cloudinary";
 import { SignedIn } from "@clerk/nextjs";
-
+import { auth } from "@clerk/nextjs/server";
 import {
   Pagination,
   PaginationContent,
@@ -50,55 +50,57 @@ export const Collection = ({
 
   return (
     <>
-      
-      <div className="collection-heading">
-        <h2 className="h2-bold text-dark-600">Recent Edits</h2>
-        {hasSearch && <Search />}
-      </div>
-
-      {images.length > 0 ? (
-        <ul className="collection-list">
-          {images.map((image: IImage) => (
-            <Card image={image} key={image._id as React.Key} />
-          ))}
-        </ul>
-      ) : (
-        <div className="collection-empty">
-          <p className="p-20-semibold">Empty List</p>
+      <SignedIn>
+        <div className="collection-heading">
+          <h2 className="h2-bold text-dark-600">Recent Edits</h2>
+          {hasSearch && <Search />}
         </div>
-      )}
 
-      {totalPages > 1 && (
-        <Pagination className="mt-10">
-          <PaginationContent className="flex w-full">
-            <Button
-              disabled={Number(page) <= 1}
-              className="collection-btn"
-              onClick={() => onPageChange("prev")}
-            >
-              <PaginationPrevious className="hover:bg-transparent hover:text-white" />
-            </Button>
+        {images.length > 0 ? (
+          <ul className="collection-list">
+            {images.map((image: IImage) => (
+              <Card image={image} key={image._id as React.Key} />
+            ))}
+          </ul>
+        ) : (
+          <div className="collection-empty">
+            <p className="p-20-semibold">Empty List</p>
+          </div>
+        )}
 
-            <p className="flex-center p-16-medium w-fit flex-1">
-              {page} / {totalPages}
-            </p>
+        {totalPages > 1 && (
+          <Pagination className="mt-10">
+            <PaginationContent className="flex w-full">
+              <Button
+                disabled={Number(page) <= 1}
+                className="collection-btn"
+                onClick={() => onPageChange("prev")}
+              >
+                <PaginationPrevious className="hover:bg-transparent hover:text-white" />
+              </Button>
 
-            <Button
-              className="button w-32 bg-purple-gradient bg-cover text-white"
-              onClick={() => onPageChange("next")}
-              disabled={Number(page) >= totalPages}
-            >
-              <PaginationNext className="hover:bg-transparent hover:text-white" />
-            </Button>
-          </PaginationContent>
-        </Pagination>
-      )}
+              <p className="flex-center p-16-medium w-fit flex-1">
+                {page} / {totalPages}
+              </p>
+
+              <Button
+                className="button w-32 bg-purple-gradient bg-cover text-white"
+                onClick={() => onPageChange("next")}
+                disabled={Number(page) >= totalPages}
+              >
+                <PaginationNext className="hover:bg-transparent hover:text-white" />
+              </Button>
+            </PaginationContent>
+          </Pagination>
+        )}
+      </SignedIn>
     </>
   );
 };
 
 const Card = ({ image }: { image: IImage }) => {
   return (
+     
     <li>
       <Link href={`/transformations/${image._id}`} className="collection-card">
         <CldImage
@@ -128,5 +130,6 @@ const Card = ({ image }: { image: IImage }) => {
         </div>
       </Link>
     </li>
+    
   );
 };
