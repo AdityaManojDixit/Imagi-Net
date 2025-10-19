@@ -1,3 +1,4 @@
+// Homepage.tsx
 import { auth } from "@clerk/nextjs/server";
 import { Collection } from "@/components/ui/shared/Collection";
 import { navLinks } from "@/constants";
@@ -19,17 +20,18 @@ const Home = async ({ searchParams }: SearchParamProps) => {
   const user = await getUserById(userId);
   if (!user) redirect("/sign-in");
 
-  // fetch only this user’s images (using ObjectId)
+  // fetch only this user’s images (using ObjectId + search query)
   const images = await getUserImages({
     page,
     userId: user._id.toString(),
+    searchQuery, // ✅ added
   });
 
   return (
     <>
       <section className="home">
         <h1 className="home-heading">
-          Unleash Your Creative Vision with Imaginify
+          Unleash Your Creative Vision withImagiNET
         </h1>
         <ul className="flex-center w-full gap-20">
           {navLinks.slice(1, 5).map((link) => (

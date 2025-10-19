@@ -10,7 +10,7 @@ import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 export const Search = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(searchParams.get("query") || "");
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -47,6 +47,7 @@ export const Search = () => {
       <Input
         className="search-field"
         placeholder="Search"
+        value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
     </div>
